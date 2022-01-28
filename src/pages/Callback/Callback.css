@@ -1,0 +1,99 @@
+.callback-screen {
+    width: 1280px;
+    height: 720px;
+    margin: auto;
+    position: relative;
+
+    background-image: url('../../assets/image/second-screen.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.callback-screen * {
+    margin-bottom: 13px;
+}
+
+.callback-screen__banner {
+    position: absolute;
+    width: 380px;
+    height: 100%;
+    padding: 50px;
+    background-color: #86D3F4;
+
+    top: 0;
+    left: 0;
+}
+
+.banner-second-screen__title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.banner-second-screen__number {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.banner-second-screen__descr {
+    font-weight: 600;
+}
+
+.numpad {
+    width: 290px;
+    margin: auto;
+    padding: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.numpad__btn {
+    width: 90px;
+    margin-bottom: 10px;
+}
+
+.numpad__btn:nth-last-child(2) {
+    width: 190px;
+}
+
+.numpad__btn:nth-last-child(2),
+.numpad__btn:last-child {
+    margin-bottom: 0;
+}
+
+.approval {
+    width: 290px;
+    margin: auto;
+    padding: 10px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.approval__descr {
+    text-align: start;
+}
+
+.approval__square {
+    position: relative;
+    min-width: 40px;
+    min-height: 40px;
+    margin-right: 10px;
+    border: 2px black solid;
+}
+
+.approval__square::before {
+    content: '\2713';
+    position: absolute;
+    font-size: 40px;
+    bottom: -5px;
+    right: 2px;
+}
+
+.banner-second-screen__btn {
+    width: 290px;
+}

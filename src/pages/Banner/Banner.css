@@ -1,0 +1,41 @@
+.video-player {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+    margin: auto;
+}
+
+.video-player__banner {
+    position: absolute;
+    width: 250px;
+    height: 360px;
+    background-color: #86D3F4;
+    top: 220px;
+    right: 0;
+}
+
+.banner-main {
+    padding: 10px;
+}
+
+.banner-main__title {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.banner-main__descr {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.banner-main__title,
+.banner-main__descr {
+    text-align: center;
+}
+
+.banner-main__title,
+.banner-main__descr,
+.banner-main__img {
+    margin-bottom: 20px;
+}

@@ -1,0 +1,40 @@
+.info-screen {
+    width: 1280px;
+    height: 720px;
+    margin: auto;
+    position: relative;
+
+    background-image: url('../../assets/image/second-screen.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.info-screen__banner {
+    position: absolute;
+    width: 380px;
+    height: 100%;
+    padding: 0 48px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    background-color: #86D3F4;
+
+    top: 0;
+    left: 0;
+}
+
+.banner-info-screen__title {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 48px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.banner-info-screen__subtitle {
+    font-size: 14px;
+}

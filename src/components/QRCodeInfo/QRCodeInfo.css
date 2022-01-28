@@ -1,0 +1,18 @@
+.qr-code-info {
+    position: absolute;
+    width: 320px;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    right: 40px;
+    bottom: 40px;
+}
+
+.qr-code-info__descr {
+    text-align: end;
+    color: white;
+    text-transform: uppercase;
+    margin-right: 10px;
+}

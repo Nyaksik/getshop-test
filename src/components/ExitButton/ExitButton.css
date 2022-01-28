@@ -1,0 +1,8 @@
+.exit-button {
+    position: absolute;
+    width: 90px;
+    height: 50px;
+    right: 20px;
+    top: 20px;
+    font-size: 32px;
+}
