@@ -44,7 +44,7 @@ function Promo() {
                     <p className='banner-main__descr'>
                         Сканируйте QR-код<br/>или нажмите ОК
                     </p>
-                    <button ref={okButton} onKeyPress={handleEnterPress} className='btn'>Ок</button>
+                    <button ref={okButton} onKeyPress={handleEnterPress} className='btn btn_focus'>Ок</button>
                 </div>}
         </div>
     )

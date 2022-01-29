@@ -40,7 +40,7 @@ code {
 }
 
 .btn:active,
-.btn:focus {
+.btn_focus {
   background-color: black;
   color: #86D3F4;
 }

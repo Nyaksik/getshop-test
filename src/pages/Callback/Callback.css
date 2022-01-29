@@ -10,10 +10,6 @@
     background-size: cover;
 }
 
-.callback-screen * {
-    margin-bottom: 13px;
-}
-
 .callback-screen__banner {
     position: absolute;
     width: 380px;
@@ -25,15 +21,28 @@
     left: 0;
 }
 
+.callback-screen__banner * {
+    margin-bottom: 13px;
+}
+
 .banner-second-screen__title {
     font-size: 24px;
     font-weight: 600;
 }
 
-.banner-second-screen__number {
-    font-size: 32px;
+.banner-second-screen__input {
+    width: 290px;
+    text-align: center;
+    font-size: 24px;
     font-weight: 800;
     letter-spacing: 2px;
+    outline: none;
+    border: none;
+    background-color: #86D3F4;
+}
+
+.banner-second-screen__input::placeholder {
+    color: black;
 }
 
 .banner-second-screen__descr {
@@ -84,14 +93,19 @@
     min-height: 40px;
     margin-right: 10px;
     border: 2px black solid;
+    transition: .2s;
 }
 
-.approval__square::before {
+.approval__square_check::before {
     content: '\2713';
     position: absolute;
     font-size: 40px;
     bottom: -5px;
     right: 2px;
+}
+
+.approval__square_focus {
+    box-shadow: 0px 1px 5px 1px rgba(35, 60, 80, 1);
 }
 
 .banner-second-screen__btn {
