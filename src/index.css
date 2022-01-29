@@ -33,12 +33,14 @@ code {
   transition: .2s;
 }
 
+
 .btn:disabled {
   border-color: #4E4E4E;
   color: #4E4E4E;
 }
 
-.btn:active {
+.btn:active,
+.btn:focus {
   background-color: black;
   color: #86D3F4;
 }
