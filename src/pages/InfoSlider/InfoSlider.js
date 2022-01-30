@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
+import ExitButton from '../../components/ExitButton/ExitButton'
 import Slide1 from '../../assets/image/slide-1.png'
 import Slide2 from '../../assets/image/slide-2.png'
 import Slide3 from '../../assets/image/slide-3.png'
-import ExitButton from '../../components/ExitButton/ExitButton'
 import './InfoSlider.css'
 
 function InfoSlider() {

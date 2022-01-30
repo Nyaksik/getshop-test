@@ -1,5 +1,5 @@
 const URL = 'http://apilayer.net/api/validate'
-const API_KEY = '33c12490c47c326617cfff86a22dd691'
+const API_KEY = '032d41dc0136a41bb0975d8206b4f9ec'
 
 export default async function phoneValidate(number) {
     const searchObj = {

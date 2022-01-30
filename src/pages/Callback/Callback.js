@@ -13,7 +13,7 @@ function Callback() {
     const [approval, setApproval] = useState(false)
     const [valid, setValid] = useState(true)
     const [position, setPosition] = useState({ row: 2, column: 2 })
-    const maxLength = 16
+    const maxLength = 11
     const isMaxLength = number.length === maxLength
 
     const numPad = [
@@ -75,16 +75,14 @@ function Callback() {
     ]
 
     function phoneMask(value) {
-        const newValue = value
-            .replace(/[^0-9]/g, '')
-            .replace(/^(7)?(\d[0-9]{0,2})?(\d{0,3})?(\d{0,2})?(\d{0,2})?(\d*)/g, function(_, p1, p2, p3, p4, p5) {
-                return `+${p1 || '7'}(${p2 || ''})${p3 || ''}-${p4 || ''}-${p5 || ''}`
+        return value.replace(/[^0-9]/g, '')
+            .replace(/^(\d{0,1})?(\d{0,3})?(\d{0,3})?(\d{0,2})?(\d{0,2})?(\d*)$/g, function(_, p1, p2, p3, p4, p5) {
+                return `+${p1 || '7'}(${p2 || '___'})${p3 || '___'}-${p4 || '__'}-${p5 || '__'}`
             })
-        return newValue
     }
 
     function backspaceCase() {
-        if(number.length === 2) {
+        if(number.length < 2) {
             setNumber('')
         } else {
             const backSpace = number.slice(0, -1)
@@ -106,9 +104,7 @@ function Callback() {
             navigate('/info')
         } else {
             const currentNumber = numPad.find(it => it.row === position.row && it.column === position.column)?.value
-            const newValue = `${number}${currentNumber}`
-            const inputMask = phoneMask(newValue)
-            setNumber(inputMask)
+            setNumber(`${number}${currentNumber}`)
         }
     }
 
@@ -132,15 +128,17 @@ function Callback() {
                 setPosition({ ...position, column: ArrowRight })
                 break
             case 'Enter':
-                enterCase()
+                if(!isMaxLength) {
+                    enterCase()
+                }
                 break
             case 'Backspace':
                 backspaceCase()
                 break
             default:
-                const newValue = `${number}${e.key}`
-                const inputMask = phoneMask(newValue)
-                setNumber(inputMask)
+                if(!isMaxLength) {
+                    setNumber(`${number}${e.key}`)
+                }
                 break
         }
     }
@@ -162,11 +160,11 @@ function Callback() {
                         valid ? 'banner-second-screen__input' : 'banner-second-screen__input banner-second-screen__input_err'
                     }
                     readOnly
-                    value={number} />
+                    value={phoneMask(number)} />
                 <p className='banner-second-screen__descr'>
                     и с Вами свяжется наш менеджер для дальнейшней консультации
                 </p>
-                <Numpad numpad={numPad} inputHandle={inputHandle} position={position} />
+                <Numpad numpad={numPad} maxLength={16} inputHandle={inputHandle} position={position} />
                 {valid
                     ? <div className='approval'>
                         <div className={
@@ -189,7 +187,7 @@ function Callback() {
                         ? 'btn btn_focus banner-second-screen__btn'
                         : 'btn banner-second-screen__btn'
                     }
-                    disabled={!(isMaxLength && approval && valid)}>
+                    disabled={!(approval && valid)}>
                         Подвердить номер
                 </button>
             </div>
