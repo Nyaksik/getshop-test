@@ -9,12 +9,20 @@ function Promo() {
 
     const videoPlayer = useRef(null)
     const [seconds, setSeconds] = useState(0)
+    const isShow = seconds >= 5
 
     function handleEnterPress(e) {
         if(e.key === 'Enter') {
+            sessionStorage.setItem('currentTime', videoPlayer.current.currentTime)
             navigate('/callback')
         }
     }
+
+    useEffect(() => {
+        const currentTime = sessionStorage.getItem('currentTime')
+        videoPlayer.current.currentTime = currentTime
+        videoPlayer.current.play()
+    }, [])
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -27,7 +35,7 @@ function Promo() {
             <video ref={videoPlayer} muted autoPlay>
                 <source src={Video} type='video/mp4' />
             </video>
-            {seconds >= 5 && 
+            {isShow && 
                 <div className='banner-main video-player__banner'>
                     <p className='banner-main__title'>
                         Исполните мечту вашего малыша!<br/>Подарите ему собаку!
