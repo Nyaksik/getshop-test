@@ -4,10 +4,10 @@ function Numpad({ numpad, inputHandle, position }) {
     return (
         <div className='numpad' onKeyDown={inputHandle}>
             {
-                numpad.map((it, index) => {
+                numpad.map((it) => {
                     return (
                         <button
-                            key={index}
+                            key={it.value}
                             autoFocus={it.value === '5'}
                             className={
                                 position.row === it.row && position.column === it.column

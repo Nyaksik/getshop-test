@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import phoneValidate from '../../service/apiPhoneValidate'
 import ExitButton from '../../components/ExitButton/ExitButton'
 import Numpad from '../../components/Numpad/Numpad'
 import QRCodeInfo from '../../components/QRCodeInfo/QRCodeInfo'
@@ -10,6 +11,7 @@ function Callback() {
 
     const [number, setNumber] = useState('')
     const [approval, setApproval] = useState(false)
+    const [valid, setValid] = useState(true)
     const [position, setPosition] = useState({ row: 2, column: 2 })
     const maxLength = 16
     const isMaxLength = number.length === maxLength
@@ -90,6 +92,11 @@ function Callback() {
         }
     }
 
+    async function validate(phoneNumber) {
+        const res = await phoneValidate(phoneNumber)
+        setValid(res?.valid)
+    }
+
     function enterCase() {
         if(position.row === 4 && position.column === 1) {
             backspaceCase()
@@ -137,37 +144,52 @@ function Callback() {
                 break
         }
     }
+
+    useEffect(() => {
+        if(isMaxLength) {
+            validate(number)
+        }
+    }, [isMaxLength, number])
     return (
         <div className="callback-screen">
             <div className='banner-second-screen callback-screen__banner'>
                 <p className='banner-second-screen__title'>
                     Введите ваш номер мобильного телефона
                 </p>
-                <input placeholder='+7(___)___-__-__' className='banner-second-screen__input' readOnly value={number} />
+                <input
+                    placeholder='+7(___)___-__-__'
+                    className={
+                        valid ? 'banner-second-screen__input' : 'banner-second-screen__input banner-second-screen__input_err'
+                    }
+                    readOnly
+                    value={number} />
                 <p className='banner-second-screen__descr'>
                     и с Вами свяжется наш менеджер для дальнейшней консультации
                 </p>
                 <Numpad numpad={numPad} inputHandle={inputHandle} position={position} />
-                <div className='approval'>
-                    <div className={
-                        approval
-                        ? 'approval__square approval__square_check'
-                        : position.row === 5
-                        ? 'approval__square approval__square_focus'
-                        : 'approval__square'
-                        }>
+                {valid
+                    ? <div className='approval'>
+                        <div className={
+                            approval
+                            ? 'approval__square approval__square_check'
+                            : position.row === 5
+                            ? 'approval__square approval__square_focus'
+                            : 'approval__square'
+                            }>
+                        </div>
+                        <p className='approval__descr'>
+                            Согласие на обработку персональных данных
+                        </p>
                     </div>
-                    <p className='approval__descr'>
-                        Согласие на обработку персональных данных
-                    </p>
-                </div>
+                    : <p className='approval__err'>Неверно введён номер</p>
+                }
                 <button
                     className={
                         position.row === 6
                         ? 'btn btn_focus banner-second-screen__btn'
                         : 'btn banner-second-screen__btn'
                     }
-                    disabled={!(isMaxLength && approval)}>
+                    disabled={!(isMaxLength && approval && valid)}>
                         Подвердить номер
                 </button>
             </div>

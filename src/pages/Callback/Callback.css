@@ -45,6 +45,10 @@
     color: black;
 }
 
+.banner-second-screen__input_err {
+    color: red;
+}
+
 .banner-second-screen__descr {
     font-weight: 600;
 }
@@ -78,6 +82,13 @@
     font-size: 40px;
     bottom: -5px;
     right: 2px;
+}
+
+.approval__err {
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: red;
 }
 
 .approval__square_focus {
