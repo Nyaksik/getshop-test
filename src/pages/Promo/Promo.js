@@ -8,8 +8,6 @@ function Promo() {
     const navigate = useNavigate()
 
     const videoPlayer = useRef(null)
-    const okButton = useRef(null)
-
     const [seconds, setSeconds] = useState(0)
 
     function handleEnterPress(e) {
@@ -19,12 +17,6 @@ function Promo() {
     }
 
     useEffect(() => {
-        if(okButton.current) {
-            okButton.current.focus()
-        }
-    }, [seconds])
-
-    useEffect(() => {
         const timer = setInterval(() => {
             setSeconds(Math.floor(videoPlayer.current.currentTime))
         }, 1000)
@@ -32,7 +24,7 @@ function Promo() {
     }, [])
     return (
         <div className='video-player'>
-            <video ref={videoPlayer} muted={true} autoPlay={true}>
+            <video ref={videoPlayer} muted autoPlay>
                 <source src={Video} type='video/mp4' />
             </video>
             {seconds >= 5 && 
@@ -44,7 +36,7 @@ function Promo() {
                     <p className='banner-main__descr'>
                         Сканируйте QR-код<br/>или нажмите ОК
                     </p>
-                    <button ref={okButton} onKeyPress={handleEnterPress} className='btn btn_focus'>Ок</button>
+                    <button  onKeyPress={handleEnterPress} autoFocus className='btn btn_focus'>Ок</button>
                 </div>}
         </div>
     )

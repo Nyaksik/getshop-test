@@ -1,0 +1,23 @@
+.numpad {
+    width: 290px;
+    margin: auto;
+    padding: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.numpad__btn {
+    width: 90px;
+    margin-bottom: 10px;
+}
+
+.numpad__btn:nth-last-child(2) {
+    width: 190px;
+}
+
+.numpad__btn:nth-last-child(2),
+.numpad__btn:last-child {
+    margin-bottom: 0;
+}

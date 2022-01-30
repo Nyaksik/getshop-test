@@ -1,17 +1,18 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useRef } from 'react/cjs/react.development'
 import ExitButton from '../../components/ExitButton/ExitButton'
+import Numpad from '../../components/Numpad/Numpad'
 import QRCodeInfo from '../../components/QRCodeInfo/QRCodeInfo'
 import './Callback.css'
 
 function Callback() {
-    const numPadRef = useRef(null)
     const navigate = useNavigate()
 
     const [number, setNumber] = useState('')
     const [approval, setApproval] = useState(false)
-    const [rowsColumns, setRowsColumns] = useState({ row: 2, column: 2 })
+    const [position, setPosition] = useState({ row: 2, column: 2 })
+    const maxLength = 16
+    const isMaxLength = number.length === maxLength
 
     const numPad = [
         {
@@ -90,14 +91,14 @@ function Callback() {
     }
 
     function enterCase() {
-        if(rowsColumns.row === 4 && rowsColumns.column === 1) {
+        if(position.row === 4 && position.column === 1) {
             backspaceCase()
-        } else if(rowsColumns.row === 5) {
+        } else if(position.row === 5) {
             setApproval(!approval)
-        } else if(rowsColumns.row === 6) {
+        } else if(position.row === 6) {
             navigate('/info')
         } else {
-            const currentNumber = numPad.filter(it => it.row === rowsColumns.row && it.column === rowsColumns.column)[0].value
+            const currentNumber = numPad.find(it => it.row === position.row && it.column === position.column)?.value
             const newValue = `${number}${currentNumber}`
             const inputMask = phoneMask(newValue)
             setNumber(inputMask)
@@ -107,26 +108,21 @@ function Callback() {
     function inputHandle(e) {
         switch(e.key) {
             case 'ArrowUp':
-                const ArrowUp = Math.max(1, rowsColumns.row - 1)
-                setRowsColumns({ ...rowsColumns, row: ArrowUp })
-                console.log()
+                const ArrowUp = Math.max(1, position.row - 1)
+                setPosition({ ...position, row: ArrowUp })
                 break
             case 'ArrowDown':
-                if(approval && number.length === 16) {
-                    const ArrowDown = Math.min(6, rowsColumns.row + 1)
-                    setRowsColumns({ ...rowsColumns, row: ArrowDown })
-                } else {
-                    const ArrowDown = Math.min(5, rowsColumns.row + 1)
-                    setRowsColumns({ ...rowsColumns, row: ArrowDown })
-                }
+                const acceptRow = approval && isMaxLength ? 6 : 5
+                const ArrowDown = Math.min(acceptRow, position.row + 1)
+                setPosition({ ...position, row: ArrowDown })
                 break
             case 'ArrowLeft':
-                const ArrowLeft = Math.max(1, rowsColumns.column - 1)
-                setRowsColumns({ ...rowsColumns, column: ArrowLeft })
+                const ArrowLeft = Math.max(1, position.column - 1)
+                setPosition({ ...position, column: ArrowLeft })
                 break
             case 'ArrowRight':
-                const ArrowRight = Math.min(3, rowsColumns.column + 1)
-                setRowsColumns({ ...rowsColumns, column: ArrowRight })
+                const ArrowRight = Math.min(3, position.column + 1)
+                setPosition({ ...position, column: ArrowRight })
                 break
             case 'Enter':
                 enterCase()
@@ -141,56 +137,22 @@ function Callback() {
                 break
         }
     }
-    
-    useEffect(() => {
-        numPadRef.current.focus()
-    })
     return (
         <div className="callback-screen">
             <div className='banner-second-screen callback-screen__banner'>
                 <p className='banner-second-screen__title'>
                     Введите ваш номер мобильного телефона
                 </p>
-                <input placeholder='+7(___)___-__-__' className='banner-second-screen__input' readOnly value={number} onChange={inputHandle} />
+                <input placeholder='+7(___)___-__-__' className='banner-second-screen__input' readOnly value={number} />
                 <p className='banner-second-screen__descr'>
                     и с Вами свяжется наш менеджер для дальнейшней консультации
                 </p>
-                <div className='numpad' onKeyDown={inputHandle}>
-                    {
-                        numPad.map((it, index) => {
-                            if(index === 4) {
-                                return (
-                                    <button
-                                        key={index}
-                                        ref={numPadRef}
-                                        className={
-                                            rowsColumns.row === it.row && rowsColumns.column === it.column
-                                            ? 'btn btn_focus numpad__btn'
-                                            : 'btn numpad__btn'
-                                            }>
-                                        {it.value}
-                                    </button>
-                                )
-                            }
-                            return (
-                                <button
-                                    key={index}
-                                    className={
-                                        rowsColumns.row === it.row && rowsColumns.column === it.column
-                                        ? 'btn btn_focus numpad__btn'
-                                        : 'btn numpad__btn'
-                                        }>
-                                    {it.value}
-                                </button>
-                            )
-                        })
-                    }
-                </div>
+                <Numpad numpad={numPad} inputHandle={inputHandle} position={position} />
                 <div className='approval'>
                     <div className={
                         approval
                         ? 'approval__square approval__square_check'
-                        : rowsColumns.row === 5
+                        : position.row === 5
                         ? 'approval__square approval__square_focus'
                         : 'approval__square'
                         }>
@@ -201,11 +163,11 @@ function Callback() {
                 </div>
                 <button
                     className={
-                        rowsColumns.row === 6
+                        position.row === 6
                         ? 'btn btn_focus banner-second-screen__btn'
                         : 'btn banner-second-screen__btn'
                     }
-                    disabled={!(number.length === 16 && approval)}>
+                    disabled={!(isMaxLength && approval)}>
                         Подвердить номер
                 </button>
             </div>
