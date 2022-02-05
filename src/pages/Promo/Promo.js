@@ -32,7 +32,7 @@ function Promo() {
     }, [])
     return (
         <div className='video-player'>
-            <video ref={videoPlayer} muted autoPlay>
+            <video ref={videoPlayer} muted autoPlay loop>
                 <source src={Video} type='video/mp4' />
             </video>
             {isShow && 

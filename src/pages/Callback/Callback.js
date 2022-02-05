@@ -1,18 +1,10 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import useArrowNavigation from '../../hooks/useArrowNavigation'
 import ExitButton from '../../components/ExitButton/ExitButton'
 import Numpad from '../../components/Numpad/Numpad'
 import QRCodeInfo from '../../components/QRCodeInfo/QRCodeInfo'
 import './Callback.css'
 
 function Callback() {
-    const navigate = useNavigate()
-    const [number, setNumber] = useState('')
-    const [approval, setApproval] = useState(false)
-    const [position, setPosition] = useState({ row: 2, column: 2 })
-    const maxLength = 11
-    const isMaxLength = number.length === maxLength
-
     const numPad = [
         {
             value: '1',
@@ -70,6 +62,7 @@ function Callback() {
             column: 2
         }
     ]
+    const arrowNavigation = useArrowNavigation(numPad)
 
     function phoneMask(value) {
         return value.replace(/[^0-9]/g, '')
@@ -78,64 +71,6 @@ function Callback() {
             })
     }
 
-    function backspaceCase() {
-        if(number.length < 2) {
-            setNumber('')
-        } else {
-            const backSpace = number.slice(0, -1)
-            setNumber(backSpace)
-        }
-    }
-
-    function enterCase() {
-        if(position.row === 4 && position.column === 1) {
-            backspaceCase()
-        } else if(position.row === 5) {
-            setApproval(!approval)
-        } else if(position.row === 6) {
-            navigate('/info')
-        } else if(position.column === 4) {
-            navigate('/')
-        } else {
-            const currentNumber = numPad.find(it => it.row === position.row && it.column === position.column)?.value
-            if(!isMaxLength) {
-                setNumber(`${number}${currentNumber}`)
-            }
-        }
-    }
-
-    function inputHandle(e) {
-        switch(e.key) {
-            case 'ArrowUp':
-                const ArrowUp = Math.max(1, position.row - 1)
-                setPosition({ ...position, row: ArrowUp })
-                break
-            case 'ArrowDown':
-                const acceptRow = approval && isMaxLength ? 6 : 5
-                const ArrowDown = Math.min(acceptRow, position.row + 1)
-                setPosition({ ...position, row: ArrowDown })
-                break
-            case 'ArrowLeft':
-                const ArrowLeft = Math.max(1, position.column - 1)
-                setPosition({ ...position, column: ArrowLeft })
-                break
-            case 'ArrowRight':
-                const ArrowRight = Math.min(4, position.column + 1)
-                setPosition({ ...position, column: ArrowRight })
-                break
-            case 'Enter':
-                enterCase()
-                break
-            case 'Backspace':
-                backspaceCase()
-                break
-            default:
-                const onlyNumber = e.key.replace(/\D/, '')
-                setNumber(`${number}${onlyNumber}`)
-                break
-        }
-    }
-    
     return (
         <div className="callback-screen">
             <div className='banner-second-screen callback-screen__banner'>
@@ -145,21 +80,20 @@ function Callback() {
                 <input
                     placeholder='+7(___)___-__-__'
                     className={
-                        isMaxLength ? 'banner-second-screen__input' : 'banner-second-screen__input banner-second-screen__input_err'
+                        arrowNavigation.isMaxLength ? 'banner-second-screen__input' : 'banner-second-screen__input banner-second-screen__input_err'
                     }
-                    maxLength={maxLength}
                     readOnly
-                    value={phoneMask(number)} />
+                    value={phoneMask(arrowNavigation.number)} />
                 <p className='banner-second-screen__descr'>
                     и с Вами свяжется наш менеджер для дальнейшней консультации
                 </p>
-                <Numpad numpad={numPad} inputHandle={inputHandle} position={position} />
-                {isMaxLength
+                <Numpad numpad={numPad} {...arrowNavigation} />
+                {arrowNavigation.isMaxLength
                     ? <div className='approval'>
                         <div className={
-                            approval
+                            arrowNavigation.approval
                             ? 'approval__square approval__square_focus approval__square_check'
-                            : position.row === 5
+                            : arrowNavigation.position.row === 5
                             ? 'approval__square approval__square_focus'
                             : 'approval__square'
                             }>
@@ -172,15 +106,15 @@ function Callback() {
                 }
                 <button
                     className={
-                        position.row === 6
+                        arrowNavigation.position.row === 6
                         ? 'btn btn_focus banner-second-screen__btn'
                         : 'btn banner-second-screen__btn'
                     }
-                    disabled={!(approval && isMaxLength)}>
+                    disabled={!(arrowNavigation.approval && arrowNavigation.isMaxLength)}>
                         Подвердить номер
                 </button>
             </div>
-            <ExitButton column={position.column} />
+            <ExitButton column={arrowNavigation.position.column} />
             <QRCodeInfo />
         </div>
     )
