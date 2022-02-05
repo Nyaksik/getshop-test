@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import phoneValidate from '../../service/apiPhoneValidate'
 import ExitButton from '../../components/ExitButton/ExitButton'
 import Numpad from '../../components/Numpad/Numpad'
 import QRCodeInfo from '../../components/QRCodeInfo/QRCodeInfo'
@@ -8,10 +7,8 @@ import './Callback.css'
 
 function Callback() {
     const navigate = useNavigate()
-
     const [number, setNumber] = useState('')
     const [approval, setApproval] = useState(false)
-    const [valid, setValid] = useState(true)
     const [position, setPosition] = useState({ row: 2, column: 2 })
     const maxLength = 11
     const isMaxLength = number.length === maxLength
@@ -90,11 +87,6 @@ function Callback() {
         }
     }
 
-    async function validate(phoneNumber) {
-        const res = await phoneValidate(phoneNumber)
-        setValid(res?.valid)
-    }
-
     function enterCase() {
         if(position.row === 4 && position.column === 1) {
             backspaceCase()
@@ -102,9 +94,13 @@ function Callback() {
             setApproval(!approval)
         } else if(position.row === 6) {
             navigate('/info')
+        } else if(position.column === 4) {
+            navigate('/')
         } else {
             const currentNumber = numPad.find(it => it.row === position.row && it.column === position.column)?.value
-            setNumber(`${number}${currentNumber}`)
+            if(!isMaxLength) {
+                setNumber(`${number}${currentNumber}`)
+            }
         }
     }
 
@@ -124,30 +120,22 @@ function Callback() {
                 setPosition({ ...position, column: ArrowLeft })
                 break
             case 'ArrowRight':
-                const ArrowRight = Math.min(3, position.column + 1)
+                const ArrowRight = Math.min(4, position.column + 1)
                 setPosition({ ...position, column: ArrowRight })
                 break
             case 'Enter':
-                if(!isMaxLength) {
-                    enterCase()
-                }
+                enterCase()
                 break
             case 'Backspace':
                 backspaceCase()
                 break
             default:
-                if(!isMaxLength) {
-                    setNumber(`${number}${e.key}`)
-                }
+                const onlyNumber = e.key.replace(/\D/, '')
+                setNumber(`${number}${onlyNumber}`)
                 break
         }
     }
-
-    useEffect(() => {
-        if(isMaxLength) {
-            validate(number)
-        }
-    }, [isMaxLength, number])
+    
     return (
         <div className="callback-screen">
             <div className='banner-second-screen callback-screen__banner'>
@@ -157,19 +145,20 @@ function Callback() {
                 <input
                     placeholder='+7(___)___-__-__'
                     className={
-                        valid ? 'banner-second-screen__input' : 'banner-second-screen__input banner-second-screen__input_err'
+                        isMaxLength ? 'banner-second-screen__input' : 'banner-second-screen__input banner-second-screen__input_err'
                     }
+                    maxLength={maxLength}
                     readOnly
                     value={phoneMask(number)} />
                 <p className='banner-second-screen__descr'>
                     и с Вами свяжется наш менеджер для дальнейшней консультации
                 </p>
-                <Numpad numpad={numPad} maxLength={16} inputHandle={inputHandle} position={position} />
-                {valid
+                <Numpad numpad={numPad} inputHandle={inputHandle} position={position} />
+                {isMaxLength
                     ? <div className='approval'>
                         <div className={
                             approval
-                            ? 'approval__square approval__square_check'
+                            ? 'approval__square approval__square_focus approval__square_check'
                             : position.row === 5
                             ? 'approval__square approval__square_focus'
                             : 'approval__square'
@@ -187,11 +176,11 @@ function Callback() {
                         ? 'btn btn_focus banner-second-screen__btn'
                         : 'btn banner-second-screen__btn'
                     }
-                    disabled={!(approval && valid)}>
+                    disabled={!(approval && isMaxLength)}>
                         Подвердить номер
                 </button>
             </div>
-            <ExitButton />
+            <ExitButton column={position.column} />
             <QRCodeInfo />
         </div>
     )

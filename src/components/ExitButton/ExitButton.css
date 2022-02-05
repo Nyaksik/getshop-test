@@ -6,3 +6,8 @@
     top: 20px;
     font-size: 32px;
 }
+
+.exit-button_focus {
+    background-color: black;
+    color: white;
+}

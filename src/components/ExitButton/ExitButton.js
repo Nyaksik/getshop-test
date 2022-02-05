@@ -1,10 +1,13 @@
-import { useNavigate } from 'react-router-dom'
 import './ExitButton.css'
 
-function ExitButton() {
-    const navigate = useNavigate()
+function ExitButton({ column, autoFocus, enterPress }) {
     return (
-        <button className="exit-button" onClick={e => navigate('/')}>&#215;</button>
+        <button
+        autoFocus={autoFocus}
+        className={column === 4 || autoFocus ? "exit-button exit-button_focus" : "exit-button"}
+        onKeyDown={enterPress}>
+            &#215;
+        </button>
     )
 }
 
